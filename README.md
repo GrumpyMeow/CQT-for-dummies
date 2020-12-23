@@ -30,4 +30,5 @@ This buffer-size is needed to contain the changes in air-pressure (high->low).
 
 * Consequence of too low samplerate with higher frequency sound. (distortion)
 * Filters
+* Window-functions
 
