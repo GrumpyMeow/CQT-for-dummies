@@ -34,16 +34,32 @@ This buffer-size is needed to contain the changes in air-pressure (high->low).
 
 
 # Code 1
-I had found this code at [Ledcube](https://bitbucket.org/JoD/ledcube/src/master/frequency_printer.pde) for a Pinguino. The code is very optimized and runs very fast.
+I had found this C++ code at [Ledcube](https://bitbucket.org/JoD/ledcube/src/master/frequency_printer.pde) for a Pinguino based Spectrum Analyzer. 
+The code is very optimized and runs very fast.
 
 This code uses integer-calculations which significatly improves the performance.
 
 This code uses two buffers: a normal buffer and a 8-times-downsampled-buffer. This technique reduces the need for a large buffer-size.
 
 This code uses dividers to skip over samples: Div[k]. 
-
-With pure sine-waves i do see that this implementation works. But with more complex sounds i don't find the results very clear.
+# Skipping inaccuracy
+With pure sine-waves i do see that this implementation works. I do see some unexpected distortions. 
+But especially with more complex sounds i don't find the results very clear for lower frequencies.
 My guess is that because of the "skipping over samples" lower frequency harmonics appear.
+
+I see this confirmed with the data of two tests i did on two pure sine-signals. But i adjusted the algorithm to take the averages of each skip instead of just one sample. In the output "without skip averaging" you can see multiple higher energy values.
+In the output "with skip averaging" you do see these harmonics, but with a much lower energy.  
+```
+Without skip averaging:   
+   5    3   11   10    6    1    2    2   14    0    1    0    2    0    0    0   13   33    0    0    0   24   27    0    0    0    0    0    1   26   25    6 
+   1    0    2    1    1    9    4    2    0    0    6    0    1    0    0   17    0    0    0    0    0    0    0   19   33   10    0    0    0    0    0    0 
+
+With skip averaging:
+   0    0    1    1    1    0    0    0    4    0    0    0    0    0    0    0    2    6    0    0    0    8    9    0    0    0    0    0    1   21   21    5 
+   0    0    0    0    0    2    1    1    0    0    1    0    0    0    0    5    0    0    0    0    0    0    0   17   29    9    0    0    0    0    0    0 
+   
+```
+
 
 ```
 fixedpoint hamming(int m, int k) {
